@@ -43,6 +43,8 @@ body {
     justify-content: center;
     align-items: center;
     transition: opacity 1s ease, visibility 1s ease;
+    padding: 20px;
+    text-align: center;
 }
 
 #start-btn {
@@ -113,8 +115,8 @@ h1.gradient-text {
     line-height: 1.1;
     margin-bottom: 25px;
     background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-    background-clip: text;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 2px 5px rgba(255,154,158,0.3));
 }
@@ -224,7 +226,30 @@ h1.gradient-text {
     letter-spacing: 1px;
 }
 
-@media (max-width: 500px) {
-    h1.gradient-text { font-size: 2.8rem; }
-    .glass-card { padding: 40px 25px; }
+/* =========================================
+   REGLAS RESPONSIVE PARA TELÉFONOS (NUEVO)
+   ========================================= */
+@media (max-width: 600px) {
+    /* Ajustes de la tarjeta */
+    .glass-card { padding: 35px 20px; }
+    h1.gradient-text { font-size: 2.5rem; margin-bottom: 15px; }
+    .floating-icon { font-size: 2rem; margin-bottom: 10px; }
+    
+    /* Ajustes del texto dinámico */
+    #quote-text { font-size: 1rem; }
+    .quote-container { min-height: 90px; }
+    
+    /* Ajustes de la pantalla de inicio */
+    #start-screen h2 { font-size: 1.6rem; }
+    #start-btn { padding: 12px 25px; font-size: 1rem; }
+    
+    /* Ajuste de tu firma para que no toque los bordes */
+    .signature-container { bottom: 20px; }
+    .neon-signature { font-size: 0.85rem; padding: 8px 18px; }
+}
+
+@media (max-width: 360px) {
+    /* Ajustes extremos para teléfonos muy pequeños */
+    h1.gradient-text { font-size: 2.2rem; }
+    .neon-signature { flex-direction: column; gap: 5px; border-radius: 20px; text-align: center; }
 }
