@@ -7,10 +7,23 @@
     --text-light: #fdfbfb;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* Reset estricto */
+html, body { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Cero scroll */
+    position: fixed; /* Ancla la pantalla, evita rebotes en iPhone/Android */
+    touch-action: none; /* Bloquea gestos de navegador (deslizar para recargar, etc.) */
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
 
 body {
-    height: 100vh;
     background: linear-gradient(135deg, var(--bg-dark), var(--bg-mid), var(--bg-light));
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
@@ -19,7 +32,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
     perspective: 1000px;
 }
 
@@ -29,13 +41,9 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* --- PANTALLA DE INICIO --- */
 #start-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: #0f0c29;
     z-index: 9999;
     display: flex;
@@ -44,7 +52,6 @@ body {
     align-items: center;
     transition: opacity 1s ease, visibility 1s ease;
     padding: 20px;
-    text-align: center;
 }
 
 #start-btn {
@@ -62,20 +69,14 @@ body {
     animation: pulse 2s infinite;
 }
 
-#start-btn:hover {
-    transform: scale(1.05);
-}
-
 @keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4); }
-    50% { transform: scale(1.02); box-shadow: 0 5px 25px rgba(255, 154, 158, 0.7); }
-    100% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4); }
+    0%, 100% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 5px 25px rgba(255, 154, 158, 0.7); }
 }
 
-/* --- EFECTO 3D Y GLASSMORPHISM --- */
 .tilt-wrapper {
     width: 90%;
-    max-width: 450px;
+    max-width: 400px; /* Ligeramente más angosto para que nunca toque los bordes */
     z-index: 10;
     transform-style: preserve-3d;
 }
@@ -86,17 +87,15 @@ body {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 30px;
-    padding: 50px 40px;
+    padding: 50px 30px;
     text-align: center;
-    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), 
-                inset 0 0 20px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05);
     transform: translateZ(50px);
     transition: transform 0.1s ease-out;
+    width: 100%;
 }
 
-.card-content {
-    transform: translateZ(30px);
-}
+.card-content { transform: translateZ(30px); }
 
 .floating-icon {
     font-size: 2.5rem;
@@ -111,42 +110,34 @@ body {
 
 h1.gradient-text {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 3.5rem;
+    font-size: 3rem;
     line-height: 1.1;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
     -webkit-background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 2px 5px rgba(255,154,158,0.3));
 }
 
 .quote-container {
-    min-height: 80px;
+    min-height: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 #quote-text {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 300;
-    line-height: 1.6;
-    letter-spacing: 0.5px;
-    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.fade-transition {
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.fade-out {
-    opacity: 0;
-}
+.fade-transition { opacity: 1; transition: opacity 0.5s ease; }
+.fade-out { opacity: 0; }
 
 .card-footer {
-    margin-top: 35px;
+    margin-top: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -154,25 +145,19 @@ h1.gradient-text {
     opacity: 0.6;
 }
 
-.card-footer .line {
-    height: 1px;
-    width: 40px;
-    background: var(--text-light);
+.card-footer .line { height: 1px; width: 40px; background: var(--text-light); }
+.share-hint { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; }
+
+#particles-container {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.share-hint {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-/* --- PARTÍCULAS (BOKEH) --- */
 .bokeh {
     position: absolute;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-    pointer-events: none;
-    z-index: 1;
     animation: floatBokeh 10s infinite linear;
 }
 
@@ -182,74 +167,39 @@ h1.gradient-text {
     100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
 }
 
-/* --- FIRMA DEL DESARROLLADOR --- */
 .signature-container {
     position: absolute;
-    bottom: 30px;
+    bottom: 25px;
     z-index: 20;
 }
 
 .neon-signature {
     text-decoration: none;
     color: var(--text-light);
-    font-size: 0.95rem;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 10px 25px;
+    font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 10px 20px;
     border-radius: 50px;
     border: 1px solid rgba(255, 154, 158, 0.3);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     backdrop-filter: blur(10px);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 0 15px rgba(255, 154, 158, 0.1);
-}
-
-.neon-signature:hover {
-    border-color: #ff9a9e;
-    box-shadow: 0 0 25px rgba(255, 154, 158, 0.5), inset 0 0 10px rgba(255, 154, 158, 0.2);
-    transform: translateY(-5px) scale(1.05);
 }
 
 .dev-badge {
     background: linear-gradient(45deg, #ff9a9e, #fecfef);
     color: #1a0b1c;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 12px;
-    letter-spacing: 1px;
+    padding: 3px 7px;
+    border-radius: 10px;
 }
 
-.neon-signature strong {
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-
-/* =========================================
-   REGLAS RESPONSIVE PARA TELÉFONOS (NUEVO)
-   ========================================= */
-@media (max-width: 600px) {
-    /* Ajustes de la tarjeta */
+/* Ajustes Responsive Estrictos */
+@media (max-width: 400px) {
     .glass-card { padding: 35px 20px; }
-    h1.gradient-text { font-size: 2.5rem; margin-bottom: 15px; }
-    .floating-icon { font-size: 2rem; margin-bottom: 10px; }
-    
-    /* Ajustes del texto dinámico */
-    #quote-text { font-size: 1rem; }
-    .quote-container { min-height: 90px; }
-    
-    /* Ajustes de la pantalla de inicio */
-    #start-screen h2 { font-size: 1.6rem; }
-    #start-btn { padding: 12px 25px; font-size: 1rem; }
-    
-    /* Ajuste de tu firma para que no toque los bordes */
-    .signature-container { bottom: 20px; }
-    .neon-signature { font-size: 0.85rem; padding: 8px 18px; }
-}
-
-@media (max-width: 360px) {
-    /* Ajustes extremos para teléfonos muy pequeños */
-    h1.gradient-text { font-size: 2.2rem; }
-    .neon-signature { flex-direction: column; gap: 5px; border-radius: 20px; text-align: center; }
+    h1.gradient-text { font-size: 2.3rem; }
+    #quote-text { font-size: 0.95rem; }
+    .neon-signature { font-size: 0.8rem; padding: 8px 15px; }
 }
