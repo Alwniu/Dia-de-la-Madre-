@@ -6,15 +6,12 @@ const startBtn = document.getElementById('start-btn');
 bgMusic.volume = 0.4; // Ajusta el volumen a tu gusto (0.0 a 1.0)
 
 startBtn.addEventListener('click', () => {
-    // 1. Iniciar la música (tiene un catch por si falla el archivo de audio, para que no se tranque la página)
     bgMusic.play().catch(error => {
-        console.log("No se pudo reproducir el audio. ¿Verificaste que el archivo 'tu-cancion.mp3' exista?", error);
+        console.log("No se pudo reproducir el audio.", error);
     });
 
-    // 2. Desvanecer la pantalla de inicio
     startScreen.style.opacity = '0';
     
-    // 3. Quitarla del DOM para que puedas interactuar con la tarjeta
     setTimeout(() => {
         startScreen.style.visibility = 'hidden';
     }, 1000);
@@ -44,32 +41,52 @@ function changeQuote() {
 
 setInterval(changeQuote, 5000);
 
-// --- EFECTO 3D INTERACTIVO (TILT) ---
+// --- EFECTO 3D INTERACTIVO (PC Y TELÉFONOS) ---
 const wrapper = document.getElementById('tilt-wrapper');
 const card = document.getElementById('glass-card');
 
-wrapper.addEventListener('mousemove', (e) => {
+// Función que calcula el giro según la posición del dedo o el ratón
+function handleMovement(e) {
     const rect = wrapper.getBoundingClientRect();
-    const x = e.clientX - rect.left; 
-    const y = e.clientY - rect.top;  
+    
+    // Identificar si es evento táctil (teléfono) o de ratón (PC)
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const x = clientX - rect.left; 
+    const y = clientY - rect.top;  
     
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
+    // Máximo 15 grados de inclinación
     const rotateX = ((y - centerY) / centerY) * -15;
     const rotateY = ((x - centerX) / centerX) * 15;
     
     card.style.transform = `translateZ(50px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-});
+}
 
-wrapper.addEventListener('mouseleave', () => {
+// Función para restaurar la tarjeta cuando quitan el dedo/ratón
+function resetPosition() {
     card.style.transform = 'translateZ(50px) rotateX(0deg) rotateY(0deg)';
     card.style.transition = 'transform 0.5s ease-out';
-});
+}
 
-wrapper.addEventListener('mouseenter', () => {
+function removeTransition() {
     card.style.transition = 'none'; 
+}
+
+// Eventos para Computadora (Mouse)
+wrapper.addEventListener('mousemove', handleMovement);
+wrapper.addEventListener('mouseleave', resetPosition);
+wrapper.addEventListener('mouseenter', removeTransition);
+
+// Eventos para Teléfonos (Touch)
+wrapper.addEventListener('touchmove', (e) => {
+    removeTransition();
+    handleMovement(e);
 });
+wrapper.addEventListener('touchend', resetPosition);
 
 // --- GENERADOR DE EFECTO BOKEH (LUCES FLOTANTES) ---
 const particlesContainer = document.getElementById('particles-container');
