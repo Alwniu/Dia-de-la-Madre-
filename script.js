@@ -106,7 +106,7 @@ let musicStarted = false;
 bgMusic.volume = 0.4; 
 
 // Escuchar el primer clic en toda la página para saltarnos el bloqueo del navegador
-document.body.addEventListener( () => {
+document.body.addEventListener(click, () => {
     if (!musicStarted) {
         bgMusic.play().then(() => {
             musicStarted = true;
